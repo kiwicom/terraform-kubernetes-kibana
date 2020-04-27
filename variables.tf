@@ -23,7 +23,6 @@ variable "es_version" {
 
 variable "namespace" {
   type        = string
-  default     = "storage"
   description = "Namespace in which service will be deployed"
 }
 
@@ -33,6 +32,13 @@ variable "replicas" {
   description = "Kubernetes replica count for the statefulset (i.e. how many pods)"
 }
 
+variable "common_annotations" {
+  type        = map(string)
+  default     = {}
+  description = "Common annotations for all the resources"
+}
+
+// TODO: change to https?
 variable "protocol" {
   type        = string
   default     = "http"
@@ -63,6 +69,74 @@ variable "resources" {
   }
 
   description = "Allows you to set the resources for the statefulset"
+}
+
+variable "service" {
+  type        = object({
+    ports = list(object({
+      name        = string
+      port        = string
+      node_port   = string
+      target_port = string
+    }))
+  })
+  default     = {
+    ports = [
+      {
+        name        = "http"
+        port        = 5601
+        node_port   = ""
+        target_port = 5601
+      }
+    ]
+  }
+  description = "Configurable service to expose the Kibana service"
+}
+
+variable "ingress" {
+  type        = object({
+    enabled = bool
+    hosts   = list(object({
+      host = string
+      path = string
+      port = string
+    }))
+    annotations = map(string)
+  })
+  default     = {
+    enabled = false
+    hosts   = [
+      {
+        host = ""
+        path = "/"
+        port = 5601
+      }
+    ]
+    annotations = {}
+  }
+  description = "Configurable ingress to expose the Kibana service"
+}
+
+variable "extra_configs" {
+  type        = list(object({
+    name   = string
+    path   = string
+    config = string
+  }))
+  default     = []
+  description = "Additional config maps"
+}
+
+variable "extra_volumes" {
+  type        = string
+  default     = ""
+  description = "Templatable string of additional volumes to be passsed to the tpl function"
+}
+
+variable "extra_containers" {
+  type        = string
+  default     = ""
+  description = "Templatable string of additional containers to be passed to the tpl function"
 }
 
 locals {

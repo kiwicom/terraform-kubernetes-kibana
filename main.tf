@@ -1,15 +1,9 @@
-data "helm_repository" "elastic" {
-  name = "elastic"
-  url  = "https://helm.elastic.co"
-}
-
-// https://github.com/elastic/helm-charts/tree/master/kibana
+// original chart -> https://github.com/elastic/helm-charts/tree/master/kibana
 resource "helm_release" "kibana" {
-  name       = var.cluster_name
-  repository = data.helm_repository.elastic.metadata[0].name
-  chart      = "kibana"
-  namespace  = var.namespace
-  timeout    = var.helm_install_timeout
+  name      = var.cluster_name
+  chart     = "${path.module}/chart"
+  namespace = var.namespace
+  timeout   = var.helm_install_timeout
 
   set {
     name  = "elasticsearchHosts"
@@ -29,6 +23,15 @@ resource "helm_release" "kibana" {
   set {
     name  = "imageTag"
     value = var.es_version
+  }
+
+  dynamic "set" {
+    for_each = var.common_annotations
+
+    content {
+      name  = "commonAnnotations.\"${set.key}\""
+      value = var.common_annotations[set.key]
+    }
   }
 
   set {
@@ -54,5 +57,119 @@ resource "helm_release" "kibana" {
   set {
     name  = "resources.limits.memory"
     value = var.resources.requests.memory
+  }
+
+  dynamic "set" {
+    for_each = var.service.ports
+
+    content {
+      name  = "service.ports[${set.key}].name"
+      value = var.service.ports[set.key].name
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.service.ports
+
+    content {
+      name  = "service.ports[${set.key}].port"
+      value = var.service.ports[set.key].port
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.service.ports
+
+    content {
+      name  = "service.ports[${set.key}].nodePort"
+      value = var.service.ports[set.key].node_port
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.service.ports
+
+    content {
+      name  = "service.ports[${set.key}].targetPort"
+      value = var.service.ports[set.key].target_port
+    }
+  }
+
+  set {
+    name  = "ingress.enabled"
+    value = var.ingress.enabled
+  }
+
+  dynamic "set" {
+    for_each = var.ingress.hosts
+
+    content {
+      name  = "ingress.hosts[${set.key}].host"
+      value = var.ingress.hosts[set.key].host
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.ingress.hosts
+
+    content {
+      name  = "ingress.hosts[${set.key}].path"
+      value = var.ingress.hosts[set.key].path
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.ingress.hosts
+
+    content {
+      name  = "ingress.hosts[${set.key}].port"
+      value = var.ingress.hosts[set.key].port
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.ingress.annotations
+
+    content {
+      name  = "ingress.annotations.\"${set.key}\""
+      value = var.ingress.annotations[set.key]
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.extra_configs
+
+    content {
+      name  = "extraConfigs[${set.key}].name"
+      value = var.extra_configs[set.key].name
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.extra_configs
+
+    content {
+      name  = "extraConfigs[${set.key}].path"
+      value = var.extra_configs[set.key].path
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.extra_configs
+
+    content {
+      name  = "extraConfigs[${set.key}].config"
+      value = var.extra_configs[set.key].config
+    }
+  }
+
+  set {
+    name  = "extraVolumes"
+    value = var.extra_volumes
+  }
+
+  set {
+    name  = "extraContainers"
+    value = var.extra_containers
   }
 }

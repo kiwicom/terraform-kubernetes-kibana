@@ -1,0 +1,33 @@
+{{- if .Values.kibanaConfig }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "kibana.fullname" . }}-config
+  labels:
+    app: {{ .Chart.Name }}
+    release: {{ .Release.Name | quote }}
+  annotations:
+    {{- range $key, $value := .Values.commonAnnotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+data:
+{{- range $path, $config := .Values.kibanaConfig }}
+  {{ $path }}: |
+{{ $config | indent 4 -}}
+{{- end -}}
+{{- end -}}
+{{- range .Values.extraConfigs }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .name }}
+  annotations:
+    {{- range $key, $value := $.Values.commonAnnotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+data:
+  {{ .path }}: |
+{{ .config | indent 4 -}}
+{{- end -}}
