@@ -64,6 +64,7 @@ module "elasticsearch_kibana" {
   version      = "~> 1.0.0" # version >= 1.0.0 and < 1.1.0, e.g. 1.0.X
   cluster_name = local.cluster_name
   es_version   = local.es_version
+  namespace    = "storage"
 }
 ```
 
