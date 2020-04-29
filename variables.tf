@@ -38,7 +38,6 @@ variable "common_annotations" {
   description = "Common annotations for all the resources"
 }
 
-// TODO: change to https?
 variable "protocol" {
   type        = string
   default     = "http"
