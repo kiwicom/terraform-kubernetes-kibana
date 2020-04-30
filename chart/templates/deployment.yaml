@@ -60,7 +60,7 @@ spec:
             name: {{ template "kibana.fullname" . }}-config
         {{- end }}
         {{- if .Values.extraVolumes }}
-{{ tpl .Values.extraVolumes . | indent 6 }}
+{{ tpl .Values.extraVolumes . | indent 8 }}
         {{- end }}
     {{- with .Values.nodeSelector }}
       nodeSelector:

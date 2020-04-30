@@ -39,6 +39,15 @@ resource "helm_release" "kibana" {
     value = var.protocol
   }
 
+  dynamic "set" {
+    for_each = var.kibana_config
+
+    content {
+      name  = "kibanaConfig.\"${set.key}\""
+      value = var.kibana_config[set.key]
+    }
+  }
+
   set {
     name  = "resources.requests.cpu"
     value = var.resources.requests.cpu

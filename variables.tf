@@ -44,6 +44,16 @@ variable "protocol" {
   description = "The protocol that will be used for the readinessProbe. Change this to https if you have server.ssl.enabled: true set"
 }
 
+variable "kibana_config" {
+  type        = map(string)
+  default     = {
+    "kibana\\.yml" = <<EOT
+xpack\\.monitoring\\.kibana\\.collection\\.enabled\\: true
+EOT
+  }
+  description = "Allows you to add any config files in /usr/share/kibana/config/ such as kibana.yml"
+}
+
 variable "resources" {
   type = object({
     requests = object({
@@ -94,8 +104,8 @@ variable "service" {
 
 variable "ingress" {
   type        = object({
-    enabled = bool
-    hosts   = list(object({
+    enabled     = bool
+    hosts       = list(object({
       host = string
       path = string
       port = string
@@ -103,8 +113,8 @@ variable "ingress" {
     annotations = map(string)
   })
   default     = {
-    enabled = false
-    hosts   = [
+    enabled     = false
+    hosts       = [
       {
         host = ""
         path = "/"
