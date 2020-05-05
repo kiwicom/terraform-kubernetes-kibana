@@ -1,3 +1,3 @@
 output "kibana_endpoint" {
-  value = "${var.cluster_name}-kibana.${var.namespace}.svc.cluster.local:5601"
+  value = "${var.protocol}://${var.cluster_name}-kibana.${var.namespace}.svc.cluster.local:5601"
 }

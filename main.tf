@@ -1,18 +1,23 @@
 // original chart -> https://github.com/elastic/helm-charts/tree/master/kibana
 resource "helm_release" "kibana" {
-  name      = var.cluster_name
+  name      = local.full_name_override
   chart     = "${path.module}/chart"
   namespace = var.namespace
   timeout   = var.helm_install_timeout
 
   set {
+    name  = "fullnameOverride"
+    value = local.full_name_override
+  }
+
+  set {
     name  = "elasticsearchHosts"
-    value = local.elasticsearch_hosts
+    value = var.elasticsearch_hosts
   }
 
   set {
     name  = "elasticsearchURL"
-    value = local.elasticsearch_hosts
+    value = var.elasticsearch_hosts
   }
 
   set {

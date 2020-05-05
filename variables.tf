@@ -12,8 +12,7 @@ variable "cluster_name" {
 
 variable "elasticsearch_hosts" {
   type        = string
-  default     = ""
-  description = "The URLs used to connect to Elasticsearch"
+  description = "The URLs used to connect to Elasticsearch. Can be set to module.elasticsearch.elasticsearch_endpoint of master node"
 }
 
 variable "es_version" {
@@ -149,5 +148,5 @@ variable "extra_containers" {
 }
 
 locals {
-  elasticsearch_hosts = var.elasticsearch_hosts != "" ? var.elasticsearch_hosts : "http://${var.cluster_name}-master:9200"
+  full_name_override  = "${var.cluster_name}-kibana"
 }
