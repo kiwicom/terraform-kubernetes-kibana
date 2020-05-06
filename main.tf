@@ -21,6 +21,11 @@ resource "helm_release" "kibana" {
   }
 
   set {
+    name  = "httpPort"
+    value = var.http_port
+  }
+
+  set {
     name  = "replicas"
     value = var.replicas
   }

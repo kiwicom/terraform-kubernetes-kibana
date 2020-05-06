@@ -25,6 +25,12 @@ variable "namespace" {
   description = "Namespace in which service will be deployed"
 }
 
+variable "http_port" {
+  type        = number
+  default     = 5601
+  description = "The http port that Kubernetes will use for the healthchecks"
+}
+
 variable "replicas" {
   type        = number
   default     = 1
@@ -67,7 +73,7 @@ variable "resources" {
 
   default = {
     requests = {
-      cpu    = "1000m"
+      cpu    = "200m"
       memory = "2Gi"
     }
     limits   = {
@@ -148,5 +154,5 @@ variable "extra_containers" {
 }
 
 locals {
-  full_name_override  = "${var.cluster_name}-kibana"
+  full_name_override = "${var.cluster_name}-kibana"
 }
