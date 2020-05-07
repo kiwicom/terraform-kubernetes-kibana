@@ -53,7 +53,7 @@ variable "kibana_config" {
   type        = map(string)
   default     = {
     "kibana\\.yml" = <<EOT
-xpack\\.monitoring\\.kibana\\.collection\\.enabled\\: true
+xpack.monitoring.kibana.collection.enabled: true
 EOT
   }
   description = "Allows you to add any config files in /usr/share/kibana/config/ such as kibana.yml"

@@ -53,7 +53,8 @@ resource "helm_release" "kibana" {
     for_each = var.kibana_config
 
     content {
-      name  = "kibanaConfig.\"${set.key}\""
+      type  = "string"
+      name  = "kibanaConfig.${set.key}"
       value = var.kibana_config[set.key]
     }
   }
