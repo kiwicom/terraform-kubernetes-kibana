@@ -76,7 +76,7 @@ resource "helm_release" "kibana" {
 
   set {
     name  = "resources.limits.memory"
-    value = var.resources.requests.memory
+    value = var.resources.limits.memory
   }
 
   dynamic "set" {
